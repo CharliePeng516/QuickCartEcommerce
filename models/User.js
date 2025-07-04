@@ -20,10 +20,7 @@ const userSchema = new mongoose.Schema({
     cartItems: {
         type: Object,
         default: [],
-    },
-    Password: {
-        type: String,
-    },
+    }
 }, { minimize: false });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
