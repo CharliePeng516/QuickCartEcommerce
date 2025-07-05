@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react';
 import { useAuth, useUser } from '@clerk/nextjs';
+import toast from 'react-hot-toast';
 
 export const AppContext = createContext();
 
@@ -28,7 +29,7 @@ export const AppContextProvider = (props) => {
 
   const [products, setProducts] = useState([]);
   const [userData, setUserData] = useState(false);
-  const [isSeller, setIsSeller] = useState(true);
+  const [isSeller, setIsSeller] = useState(false);
   const [cartItems, setCartItems] = useState({});
 
   const fetchProductData = async () => {
@@ -36,8 +37,24 @@ export const AppContextProvider = (props) => {
   };
 
   const fetchUserData = async () => {
-    setUserData(userDummyData);
-  };
+    try{
+      if (user.publicMetadata.role ==="seller"){
+        setIsSeller(true);
+      }
+      const token = await getToken();
+
+      const {data} = await axios.get('/api/user/data', { headers: {Authorization: `Bearer ${token}`} })
+      if (data) {
+          setUserData(data);
+          setCartItems(data.cartItems || {});
+      } else {
+        toast.error(data.message)
+      } 
+
+    } catch (error) {
+      toast.error(error.message)
+   }
+};
 
   const addToCart = async (itemId) => {
     let cartData = structuredClone(cartItems);
@@ -91,8 +108,12 @@ export const AppContextProvider = (props) => {
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      setUserData(false);
+      return;
+    }
     fetchUserData();
-  }, []);
+  }, [user]);
 
   const value = {
     user,
