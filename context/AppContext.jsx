@@ -10,7 +10,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 
 export const AppContext = createContext();
 
@@ -24,7 +24,7 @@ export const AppContextProvider = (props) => {
   const router = useRouter();
 
   const { user } = useUser();
-  console.log(user);
+  const {getToken} = useAuth();
 
   const [products, setProducts] = useState([]);
   const [userData, setUserData] = useState(false);
@@ -96,6 +96,7 @@ export const AppContextProvider = (props) => {
 
   const value = {
     user,
+    getToken,
     currency,
     router,
     isSeller,
