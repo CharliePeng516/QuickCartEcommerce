@@ -1,0 +1,39 @@
+import { v2 as cloudinary } from "cloudinary";
+import { getAuth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import authSeller from "@/lib/authSeller";
+
+// config cloudinary
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+export async function POST(request) {
+    try {
+        const {userId} = getAuth(request);
+
+        const isSeller = await authSeller(userId);
+
+        if (!isSeller) {
+            return NextResponse.json({
+                success: false,
+                message: "You are not authorized to add products."
+            });
+        }
+
+        const formdata = await request.formData()
+        const name = formdata.get("name");
+        const description = formdata.get("description");
+        const price = formdata.get("price");
+        const category = formdata.get("category");
+        const image = formdata.get("image");
+    } catch (error) {
+        return NextResponse.json({
+            success: false,
+            message: error.message
+        });
+    }
+}
