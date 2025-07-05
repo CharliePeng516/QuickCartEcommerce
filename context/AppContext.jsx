@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { useAuth, useUser } from '@clerk/nextjs';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 export const AppContext = createContext();
 
