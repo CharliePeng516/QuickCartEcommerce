@@ -1,6 +1,4 @@
-import connectDB from '@/config/db';
 import { getAuth } from '@clerk/nextjs/server';
-import Address from '@/models/Address';
 import { NextResponse } from 'next/server';
 import Product from '@/models/Product';
 import { inngest } from '@/config/inngest';
@@ -48,9 +46,6 @@ export async function POST(request) {
         date: Date.now(),
       },
     });
-
-    // connect to database
-    await connectDB();
 
     // clear user cart
     const user = await User.findById(userId);
