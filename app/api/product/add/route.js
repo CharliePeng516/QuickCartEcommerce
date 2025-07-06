@@ -1,7 +1,9 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { getAuth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
 import authSeller from '@/lib/authSeller';
+import { NextResponse } from 'next/server';
+import connectDB from '@/config/db';
+import Product from '@/models/Product';
 
 // config cloudinary
 
@@ -39,7 +41,7 @@ export async function POST(request) {
     if (!files || files.length === 0) {
       return NextResponse.json({
         success: false,
-        message: 'no files uploaded',
+        error: error.message,
       });
     }
 
