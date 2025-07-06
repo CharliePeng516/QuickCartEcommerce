@@ -59,20 +59,23 @@ const OrderSummary = () => {
   const createOrder = async () => {
     try {
       if (!selectedAddress) {
-        return toast.error('Please select an address');
+        return toast.error(
+          'Please select an address'
+        );
       }
-      let cartItemsArray = Object.keys(cartItems).map(
-        (key) => ({
-          product: key,
-          quantity: cartItems[key],
-        })
-      );
+      let cartItemsArray = Object.keys(
+        cartItems
+      ).map((key) => ({
+        product: key,
+        quantity: cartItems[key],
+      }));
 
       cartItemsArray = cartItemsArray.filter(
-        (item) => item.quantity > 0 );
-      
+        (item) => item.quantity > 0
+      );
+
       if (cartItemsArray.length === 0) {
-        return toast.error('Your cart is empty'); 
+        return toast.error('Your cart is empty');
       }
 
       const token = await getToken();
@@ -95,10 +98,13 @@ const OrderSummary = () => {
         router.push('/order-placed');
       } else {
         toast.error(data.message);
-      }catch (error) {
-        console.error('Error creating order:', error);
-        toast.error(error.message);
       }
+    } catch (error) {
+      console.error(
+        'Error creating order:',
+        error
+      );
+      toast.error(error.message);
     }
   };
 
