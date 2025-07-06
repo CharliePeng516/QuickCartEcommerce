@@ -83,7 +83,7 @@ export const createUserOrder =
     {
       id: 'create-user-order',
       batchEvents: {
-        maxSize: 25,
+        maxSize: 5,
         timeout: '5s',
       },
     },
