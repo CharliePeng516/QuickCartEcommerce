@@ -63,9 +63,9 @@ export const AppContextProvider = (props) => {
           },
         }
       );
-      if (data) {
-        setUserData(data);
-        setCartItems(data.cartItems || {});
+      if (data.success) {
+        setUserData(data.user);
+        setCartItems(data.user.cartItems);
       } else {
         toast.error(data.message);
       }
@@ -120,6 +120,23 @@ export const AppContextProvider = (props) => {
       cartData[itemId] = quantity;
     }
     setCartItems(cartData);
+    if (user) {
+      try {
+        const token = await getToken();
+        await axios.post(
+          '/api/cart/update',
+          { cartData },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        toast.success('Cart Updated');
+      } catch (error) {
+        toast.error(error.message);
+      }
+    }
   };
 
   const getCartCount = () => {
