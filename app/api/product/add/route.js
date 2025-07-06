@@ -41,7 +41,7 @@ export async function POST(request) {
     if (!files || files.length === 0) {
       return NextResponse.json({
         success: false,
-        error: error.message,
+        error: 'No images provided',
       });
     }
 
