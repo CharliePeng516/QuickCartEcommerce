@@ -3,7 +3,7 @@ import { getAuth } from '@clerk/nextjs/server';
 import User from '@/models/User';
 import { NextResponse } from 'next/server';
 
-export async function GET(request) {
+export async function POST(request) {
   try {
     const { userId } = getAuth(request);
 
@@ -17,7 +17,7 @@ export async function GET(request) {
 
     await user.save();
 
-    NextResponse.json(
+    return NextResponse.json(
       {
         success: true,
         message: 'Cart updated successfully',
@@ -25,7 +25,7 @@ export async function GET(request) {
       { status: 200 }
     );
   } catch (error) {
-    NextResponse.json({
+    return NextResponse.json({
       success: false,
       error: error.message,
     });
