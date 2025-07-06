@@ -26,7 +26,7 @@ export const AppContextProvider = (props) => {
   const router = useRouter();
 
   const { user } = useUser();
-  const {getToken} = useAuth();
+  const { getToken } = useAuth();
 
   const [products, setProducts] = useState([]);
   const [userData, setUserData] = useState(false);
@@ -34,28 +34,45 @@ export const AppContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
 
   const fetchProductData = async () => {
-    setProducts(productsDummyData);
+    try {
+      const { data } = await axios.get(
+        '/api/product/list'
+      );
+      if (data.success) {
+        setProducts(data.products);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const fetchUserData = async () => {
-    try{
-      if (user.publicMetadata.role ==="seller"){
+    try {
+      if (user.publicMetadata.role === 'seller') {
         setIsSeller(true);
       }
       const token = await getToken();
 
-      const {data} = await axios.get('/api/user/data', { headers: {Authorization: `Bearer ${token}`} })
+      const { data } = await axios.get(
+        '/api/user/data',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (data) {
-          setUserData(data);
-          setCartItems(data.cartItems || {});
+        setUserData(data);
+        setCartItems(data.cartItems || {});
       } else {
-        toast.error(data.message)
-      } 
-
+        toast.error(data.message);
+      }
     } catch (error) {
-      toast.error(error.message)
-   }
-};
+      toast.error(error.message);
+    }
+  };
 
   const addToCart = async (itemId) => {
     let cartData = structuredClone(cartItems);
@@ -65,6 +82,7 @@ export const AppContextProvider = (props) => {
       cartData[itemId] = 1;
     }
     setCartItems(cartData);
+    toast.success('Item added to cart');
   };
 
   const updateCartQuantity = async (
