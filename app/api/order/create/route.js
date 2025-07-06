@@ -1,10 +1,10 @@
 import connectDB from '@/config/db';
 import { getAuth } from '@clerk/nextjs/server';
-import Address from '@/models/address';
+import Address from '@/models/Address';
 import { NextResponse } from 'next/server';
-import Product from '@/models/product';
+import Product from '@/models/Product';
 import { inngest } from '@/config/inngest';
-import User from '@/models/user';
+import User from '@/models/User';
 
 export async function POST(request) {
   try {
