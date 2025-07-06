@@ -7,8 +7,6 @@ export async function GET(request) {
   try {
     const { userId } = getAuth(request);
 
-    const addresses = await request.json();
-
     await connectDB();
 
     const newAddress = await Address.find({
