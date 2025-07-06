@@ -38,7 +38,6 @@ const OrderSummary = () => {
         }
       );
       if (data.success) {
-        console.log(data.addresses);
         setUserAddresses(data.addresses);
         if (data.addresses.length > 0) {
           setSelectedAddress(data.addresses[0]);
@@ -103,6 +102,7 @@ const OrderSummary = () => {
       );
 
       if (data.success) {
+        console.log(data);
         toast.success(data.message);
         setCartItems({});
         router.push('/order-placed');
