@@ -10,7 +10,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: 'QuickCart - E-commerce',
+  title: 'QuickCart',
   description: 'E-Commerce with Next.js ',
 };
 
