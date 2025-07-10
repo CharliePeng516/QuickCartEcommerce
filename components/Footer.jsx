@@ -39,7 +39,7 @@ const Footer = () => {
               <li>
                 <a
                   className="hover:underline transition"
-                  href="#"
+                  href="/"
                 >
                   Home
                 </a>
@@ -47,19 +47,20 @@ const Footer = () => {
               <li>
                 <a
                   className="hover:underline transition"
-                  href="#"
+                  href="/all-products"
                 >
-                  About us
+                  Shop
                 </a>
               </li>
               <li>
                 <a
                   className="hover:underline transition"
-                  href="#"
+                  href="/about"
                 >
-                  Contact us
+                  About
                 </a>
               </li>
+
               <li>
                 <a
                   className="hover:underline transition"

@@ -3,11 +3,21 @@ import React from 'react';
 import Link from 'next/link';
 import { useAppContext } from '@/context/AppContext';
 import Image from 'next/image';
-import { useClerk, UserButton } from '@clerk/nextjs';
-import { assets, BagIcon, BoxIcon, CartIcon, HomeIcon } from "@/assets/assets";
+import {
+  useClerk,
+  UserButton,
+} from '@clerk/nextjs';
+import {
+  assets,
+  BagIcon,
+  BoxIcon,
+  CartIcon,
+  HomeIcon,
+} from '@/assets/assets';
 
 const Navbar = () => {
-  const { isSeller, router, user } = useAppContext();
+  const { isSeller, router, user } =
+    useAppContext();
   const { openSignIn } = useClerk();
 
   return (
@@ -35,14 +45,14 @@ const Navbar = () => {
           href="/about"
           className="hover:text-gray-900 transition"
         >
-          About Us
+          About
         </Link>
-        <Link
+        {/* <Link
           href="/"
           className="hover:text-gray-900 transition"
         >
           Contact
-        </Link>
+        </Link> */}
 
         {isSeller && (
           <button
@@ -60,33 +70,41 @@ const Navbar = () => {
           src={assets.search_icon}
           alt="search icon"
         />
-         {user 
-         ? <>
-         <UserButton>
-          <UserButton.MenuItems>
-            <UserButton.Action 
-            label="Cart" 
-            labelIcon={<CartIcon />} 
-            onClick={() => router.push('/cart')}/>
-          </UserButton.MenuItems>
-          <UserButton.MenuItems>
-            <UserButton.Action 
-            label="My Orders" 
-            labelIcon={<BagIcon />} 
-            onClick={() => router.push('/my-orders')}/>
-          </UserButton.MenuItems>
-         </UserButton>
-         </> 
-         : <button
-          onClick={openSignIn}
-          className="flex items-center gap-2 hover:text-gray-900 transition"
-        >
-          <Image
-            src={assets.user_icon}
-            alt="user icon"
-          />
-          Account
-        </button>}
+        {user ? (
+          <>
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Cart"
+                  labelIcon={<CartIcon />}
+                  onClick={() =>
+                    router.push('/cart')
+                  }
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="My Orders"
+                  labelIcon={<BagIcon />}
+                  onClick={() =>
+                    router.push('/my-orders')
+                  }
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </>
+        ) : (
+          <button
+            onClick={openSignIn}
+            className="flex items-center gap-2 hover:text-gray-900 transition"
+          >
+            <Image
+              src={assets.user_icon}
+              alt="user icon"
+            />
+            Account
+          </button>
+        )}
       </ul>
 
       <div className="flex items-center md:hidden gap-3">
@@ -98,45 +116,57 @@ const Navbar = () => {
             Seller Dashboard
           </button>
         )}
-        {user 
-         ? <>
-         <UserButton>
-         <UserButton.MenuItems>
-            <UserButton.Action 
-            label="Home" 
-            labelIcon={<HomeIcon />} 
-            onClick={() => router.push('/')}/>
-          </UserButton.MenuItems>
-          <UserButton.MenuItems>
-            <UserButton.Action 
-            label="Products" 
-            labelIcon={<BoxIcon />} 
-            onClick={() => router.push('/all-products')}/>
-          </UserButton.MenuItems>
-          <UserButton.MenuItems>
-            <UserButton.Action 
-            label="Cart" 
-            labelIcon={<CartIcon />} 
-            onClick={() => router.push('/cart')}/>
-          </UserButton.MenuItems>
-          <UserButton.MenuItems>
-            <UserButton.Action 
-            label="My Orders" 
-            labelIcon={<BagIcon />} 
-            onClick={() => router.push('/my-orders')}/>
-          </UserButton.MenuItems>
-         </UserButton>
-         </> 
-         : <button
-          onClick={openSignIn}
-          className="flex items-center gap-2 hover:text-gray-900 transition"
-        >
-          <Image
-            src={assets.user_icon}
-            alt="user icon"
-          />
-          Account
-        </button>}
+        {user ? (
+          <>
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Home"
+                  labelIcon={<HomeIcon />}
+                  onClick={() => router.push('/')}
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Products"
+                  labelIcon={<BoxIcon />}
+                  onClick={() =>
+                    router.push('/all-products')
+                  }
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Cart"
+                  labelIcon={<CartIcon />}
+                  onClick={() =>
+                    router.push('/cart')
+                  }
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="My Orders"
+                  labelIcon={<BagIcon />}
+                  onClick={() =>
+                    router.push('/my-orders')
+                  }
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </>
+        ) : (
+          <button
+            onClick={openSignIn}
+            className="flex items-center gap-2 hover:text-gray-900 transition"
+          >
+            <Image
+              src={assets.user_icon}
+              alt="user icon"
+            />
+            Account
+          </button>
+        )}
       </div>
     </nav>
   );
