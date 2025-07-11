@@ -1,11 +1,11 @@
 import React from 'react'
 import { assets } from '@/assets/assets'
 import Image from 'next/image';
-import { useAppContext } from '@/context/AppContext';
+import { useAppSelector } from '@/app/store/hooks';
 
 const ProductCard = ({ product }) => {
 
-    const { currency, router } = useAppContext()
+    const { currency } = useAppSelector((state) => state.user);
 
     return (
         <div

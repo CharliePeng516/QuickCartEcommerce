@@ -1,6 +1,8 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
 import { AppContextProvider } from '@/context/AppContext';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 import { Toaster } from 'react-hot-toast';
 import { ClerkProvider } from '@clerk/nextjs';
 
@@ -22,9 +24,11 @@ export default function RootLayout({ children }) {
           className={`${outfit.className} antialiased text-gray-700`}
         >
           <Toaster />
+          <Provider store={store}>
           <AppContextProvider>
             {children}
           </AppContextProvider>
+        </Provider>
         </body>
       </html>
     </ClerkProvider>
