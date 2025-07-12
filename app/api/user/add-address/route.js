@@ -5,11 +5,12 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const addressSchema = z.object({
-  street: z.string().min(1, 'Street is required'),
+  fullName: z.string().min(1, 'Your name is required'),
+  phoneNumber: z.string().min(1, 'PhoneNumber is required'),
+  pincode: z.string().min(1, 'Pin/Zip code is required'),
+  area: z.string().min(1, 'Your Area is required'),
   city: z.string().min(1, 'City is required'),
   state: z.string().min(1, 'State is required'),
-  zipCode: z.string().min(1, 'Zip code is required'),
-  country: z.string().min(1, 'Country is required'),
 });
 
 export async function POST(request) {
@@ -20,6 +21,11 @@ export async function POST(request) {
     const validation = addressSchema.safeParse(address);
 
     if (!validation.success) {
+      // Return a 400 Bad Request response with validation errors
+      // You can customize the error response as needed
+      // console.error('Validation failed:', validation.error.errors);
+      // console.error('User ID:', userId);
+      // console.error('Request body:', address);  
       return NextResponse.json(
         {
           success: false,
