@@ -16,15 +16,19 @@ export async function GET(request) {
         message:
           'You are not authorized to view this page.',
       });
+    }else{
+      // console.log('User is a seller:', userId);
+      await connectDB();
+      // console.log('Connected to database', userId);
+      const products = await Product.find({ userId});
+      console.log('Products fetched:', products);
+      return NextResponse.json({
+        success: true,
+        products,
+      });
     }
 
-    await connectDB();
-    const products = await Product.find({});
 
-    return NextResponse.json({
-      success: true,
-      products,
-    });
   } catch (error) {
     return NextResponse.json({
       success: false,
