@@ -1,10 +1,7 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
-import { AppContextProvider } from '@/context/AppContext';
-import { Provider } from 'react-redux';
-import { store } from './store/store';
-import { Toaster } from 'react-hot-toast';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Providers } from './Providers';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -23,12 +20,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${outfit.className} antialiased text-gray-700`}
         >
-          <Toaster />
-          <Provider store={store}>
-          <AppContextProvider>
-            {children}
-          </AppContextProvider>
-        </Provider>
+          <Providers>{children}</Providers>
         </body>
       </html>
     </ClerkProvider>

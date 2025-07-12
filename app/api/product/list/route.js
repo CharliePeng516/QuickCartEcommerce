@@ -6,7 +6,7 @@ export async function GET(request) {
   try {
     await connectDB();
     const products = await Product.find({});
-
+    console.log('Fetched products in route:', products);
     return NextResponse.json({
       success: true,
       products,
