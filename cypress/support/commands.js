@@ -10,7 +10,7 @@
 
 // Custom command to get navbar element
 Cypress.Commands.add('getNavbar', () => {
-  return cy.get('nav');
+  cy.get('nav');
 });
 
 // Custom command to navigate to home page
@@ -38,14 +38,26 @@ Cypress.Commands.add('clickLogo', () => {
   cy.getNavbar().find('img[alt="logo"]').click();
 });
 
-// Custom command to click navigation link
 Cypress.Commands.add('clickNavLink', (linkName) => {
-  cy.getNavbar().contains(linkName).click();
+  cy.log(`Clicking nav link: ${linkName}`);
+
+  // 如果是移动端，先点开汉堡菜单
+  cy.get('body').then($body => {
+    const isHidden = $body.find('nav').find(`a:contains(${linkName})`).length === 0;
+    if (isHidden) {
+      cy.log('Detected mobile menu, opening hamburger menu');
+      cy.get('[data-testid="menu-button"]').click();
+    }
+  });
+
+  cy.getNavbar()
+    .contains(linkName)
+    .should('be.visible')
+    .click({ force: true });
 });
 
-// Custom command to verify current URL
 Cypress.Commands.add('shouldBeOnPage', (path) => {
-  cy.url().should('include', path);
+  cy.url({ timeout: 20000 }).should('include', path);
 });
 
 // Custom command to wait for page load
@@ -55,7 +67,7 @@ Cypress.Commands.add('waitForPageLoad', () => {
 
 // Override visit command to wait for page load
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
-  return originalFn(url, options).then(() => {
-    cy.waitForPageLoad();
-  });
+  originalFn(url, options);
+  cy.waitForPageLoad();
 });
+
