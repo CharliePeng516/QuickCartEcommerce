@@ -1,8 +1,8 @@
-// eslint.config.mjs / eslint.config.js
+// eslint.config.js (或 .mjs)
 import nextPlugin from '@next/eslint-plugin-next';
+import globals from 'globals';
 
 export default [
-  // 忽略目录
   {
     ignores: [
       '**/node_modules/**',
@@ -11,17 +11,29 @@ export default [
       'out/**',
     ],
   },
-
-  // 应用于项目源码
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      parserOptions: {
+        ecmaFeatures: { jsx: true }, // 关键：开启 JSX 解析
+      },
+    },
     plugins: {
       '@next/next': nextPlugin,
     },
+    // 等价于原来的 extends: ["next/core-web-vitals"]
     rules: {
-      // 等价于 extends: ["next/core-web-vitals"]
       ...nextPlugin.configs['core-web-vitals']
         .rules,
+    },
+    settings: {
+      react: { version: 'detect' }, // 让部分规则自动识别 React 版本
     },
   },
 ];
