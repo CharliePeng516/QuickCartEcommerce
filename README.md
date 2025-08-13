@@ -24,6 +24,9 @@ QuickCart is a full-stack e-commerce application built with the Next.js framewor
   - [Mongoose](https://mongoosejs.com/) - Object Data Modeling (ODM) library for MongoDB and Node.js.
   - [Inngest](https://www.inngest.com/) - For handling background tasks and events.
   - [Cloudinary](https://cloudinary.com/) - For cloud-based image and video management.
+- **Testing:**
+  - [Cypress](https://www.cypress.io/) - For integration Testing and E2E-Testing.
+  - [Playwright](https://playwright.dev/) - For integration Testing and E2E-Testing.
 
 ## Installation
 
