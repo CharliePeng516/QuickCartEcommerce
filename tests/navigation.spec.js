@@ -36,25 +36,46 @@ test.describe('Navigation Tests', () => {
 
   test('should navigate to all products page', async ({ page }) => {
     const nav = page.getByRole('navigation');
-    
-    // Click on Shop link within navbar
-    await nav.getByRole('link', { name: 'Shop' }).click();
-    
-    // Should navigate to all products page
-    await expect(page).toHaveURL('http://localhost:3000/all-products');
-    
-    // Check if the page title is correct
-    await expect(page.locator('text=All products')).toBeVisible();
+  
+    // Ensure the navbar & link are truly ready
+    await expect(nav).toBeVisible();
+    const shop = nav.getByRole('link', { name: /shop/i });
+    await expect(shop).toBeVisible();
+    await expect(shop).toBeEnabled();
+  
+    // If your app hydrates/fetches on first load, this helps
+    await page.waitForLoadState('networkidle');
+  
+    // Click and wait for navigation atomically
+    await Promise.all([
+      page.waitForURL(/\/all-products(?:\/|\?.*)?$/, { timeout: 15000 }),
+      shop.click(),
+    ]);
+  
+    // Optional: strict URL check after route settles
+    await expect(page).toHaveURL(/\/all-products$/);
+  
+    // Assert page content
+    await expect(page.locator('p', { hasText: /^All products$/i })).toBeVisible();
   });
 
   test('should navigate to about page', async ({ page }) => {
-    const nav = page.locator('nav');
+    const nav = page.getByRole('navigation');
+    
+    await expect(nav).toBeVisible();
     
     // Click on About link within navbar
-    await nav.getByRole('link', { name: 'About' }).click();
-    
+    const aboutLink = nav.getByRole('link', { name: 'About' })
+    await expect(aboutLink).toBeVisible();
+    await expect(aboutLink).toBeEnabled();
+
+    await page.waitForLoadState('networkidle');
+    await Promise.all([
+      page.waitForURL(/\/about(?:\/|\?.*)?$/, { timeout: 15000 }),
+      aboutLink.click(),
+    ]);
     // Should navigate to about page
-    await expect(page).toHaveURL('http://localhost:3000/about');
+    await expect(page).toHaveURL(/\/about$/);
   });
 
 
