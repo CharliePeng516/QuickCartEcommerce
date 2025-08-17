@@ -1,0 +1,47 @@
+name: E2E (Cypress)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build Next.js
+        run: npm run build
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run start -- -p 3000
+          wait-on: 'http://127.0.0.1:3000'
+          wait-on-timeout: 120 
+          browser: chrome      
+          config: video=false
+        env:
+          # 如果你的 app 依赖该变量，确保在 CI 里也有
+          NODE_ENV: production
+
+      # 失败也保留截图/视频以便排查
+      - name: Upload Cypress artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
+          if-no-files-found: ignore
