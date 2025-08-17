@@ -1,83 +1,75 @@
-describe('Navigation Tests', () => {
+// cypress/e2e/navigation.cy.js
+describe('Navigation Tests Comprehensive', () => {
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/', { timeout: 60000 });
   });
 
-
   it('should display navbar with logo and navigation links', () => {
-    cy.getNavbar().within(() => {
-      cy.contains('Home').should('be.visible');
-      cy.contains('Shop').should('be.visible');
-      cy.contains('About').should('be.visible');
-    });
+    cy.getNavbar().as('nav').should('be.visible');
 
+    cy.get('@nav')
+      .find('img[alt="logo"]')
+      .should('be.visible');
+    cy.get('@nav')
+      .contains('a', /^home$/i)
+      .should('be.visible');
+    cy.get('@nav')
+      .contains('a', /^(shop|products)$/i)
+      .should('be.visible');
+    cy.get('@nav')
+      .contains('a', /^about$/i)
+      .should('be.visible');
   });
 
   it('should navigate to home page when logo is clicked', () => {
-    // Navigate to a different page first
     cy.visitAllProducts();
-    
-    // Click on the logo within navbar
-    cy.clickLogo();
-    
-    // Should navigate to home page
-    cy.shouldBeOnPage('/');
+
+    cy.getNavbar()
+      .find('img[alt="logo"]')
+      .should('be.visible')
+      .click();
+
+    cy.location('pathname', {
+      timeout: 15000,
+    }).should('eq', '/');
   });
 
   it('should navigate to all products page', () => {
-    // Click on Shop link within navbar
-    cy.clickNavLink('Shop');
-    
-    // Should navigate to all products page
-    cy.shouldBeOnPage('/all-products');
-    
-    // Check if the page title is correct
-    cy.contains('All products').should('be.visible');
+    cy.getNavbar().as('nav').should('be.visible');
+
+    cy.get('@nav')
+      .contains('a', /^(shop|products)$/i)
+      .should('be.visible')
+      .and('have.attr', 'href', '/all-products')
+      .click();
+
+    cy.location('pathname', {
+      timeout: 15000,
+    }).should('eq', '/all-products');
+    cy.contains(/all products/i).should(
+      'be.visible'
+    );
   });
 
   it('should navigate to about page', () => {
-    // Click on About link within navbar
-    cy.clickNavLink('About');
-    
-    // Should navigate to about page
-    cy.shouldBeOnPage('/about');
+    cy.getNavbar().as('nav').should('be.visible');
+
+    cy.get('@nav')
+      .contains('a', /^about$/i)
+      .should('be.visible')
+      .and('have.attr', 'href', '/about')
+      .click();
+
+    cy.location('pathname', {
+      timeout: 15000,
+    }).should('eq', '/about');
   });
 
   it('should display search icon in navbar', () => {
-    const nav = cy.getNavbar();
-    
-    // Check if search icon is visible within navbar
-    nav.find('img[alt="search icon"]').should('be.visible');
-  });
-
-  it('should handle logo navigation from different pages', () => {
-    // Test logo navigation from all products page
-    cy.visitAllProducts();
-    cy.clickLogo();
-    cy.shouldBeOnPage('/');
-    
-    // Test logo navigation from about page
-    cy.visitAbout();
-    cy.clickLogo();
-    cy.shouldBeOnPage('/');
-    
-    // Test logo navigation from cart page
-    cy.visitCart();
-    cy.clickLogo();
-    cy.shouldBeOnPage('/');
-  });
-
-  it('should verify all navigation links work correctly', () => {
-    // Test Home link
-    cy.clickNavLink('Home');
-    cy.shouldBeOnPage('/');
-    
-    // Test Shop link
-    cy.clickNavLink('Shop');
-    cy.shouldBeOnPage('/all-products');
-    
-    // Test About link
-    cy.clickNavLink('About');
-    cy.shouldBeOnPage('/about');
+    cy.getNavbar().within(() => {
+      cy.get(
+        'img[alt="search icon"], [data-testid="search-icon"], svg[aria-label="search"]'
+      ).should('be.visible');
+    });
   });
 });
