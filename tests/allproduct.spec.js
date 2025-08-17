@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    page.on('requestfailed', (r) =>
-      console.log(
-        'REQ FAILED:',
-        r.url(),
-        r.failure()
-      )
-    );
+    // page.on('requestfailed', (r) =>
+    //   console.log(
+    //     'REQ FAILED:',
+    //     r.url(),
+    //     r.failure()
+    //   )
+    // );
     await page.goto('/', {
       waitUntil: 'domcontentloaded',
       timeout: 60_000,

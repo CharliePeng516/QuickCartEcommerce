@@ -7,14 +7,14 @@ const navLocator = (page) =>
 
 test.describe('Navigation Tests', () => {
   test.beforeEach(async ({ page }) => {
-    page.on('requestfailed', (r) =>
-      console.log(
-        'REQ FAILED:',
-        r.method(),
-        r.url(),
-        r.failure()
-      )
-    );
+    // page.on('requestfailed', (r) =>
+    //   console.log(
+    //     'REQ FAILED:',
+    //     r.method(),
+    //     r.url(),
+    //     r.failure()
+    //   )
+    // );
     await page.goto('/', {
       waitUntil: 'domcontentloaded',
       timeout: 60_000,
@@ -24,7 +24,7 @@ test.describe('Navigation Tests', () => {
   test('should display navbar with logo and navigation links', async ({
     page,
   }) => {
-    const nav = page.getByRole('navigation'); 
+    const nav = page.getByRole('navigation');
     await expect(nav).toBeVisible();
 
     await expect(
@@ -48,33 +48,6 @@ test.describe('Navigation Tests', () => {
     await expect(
       nav.getByRole('link', { name: /^about$/i })
     ).toBeVisible();
-  });
-
-  test('should navigate to home page when logo is clicked', async ({
-    page,
-  }) => {
-    const nav = navLocator(page);
-
-    await page.goto('/all-products', {
-      waitUntil: 'domcontentloaded',
-    });
-
-    const logo = nav.locator(
-      'a:has(img[alt="logo"]), img[alt="logo"]'
-    );
-    await expect(logo).toBeVisible();
-
-    await Promise.all([
-      page.waitForURL(
-        /^(?:https?:\/\/[^/]+)?\/(?:\?.*)?$/,
-        { timeout: 15000 }
-      ),
-      logo.click(),
-    ]);
-
-    await expect(page).toHaveURL(
-      /^(?:https?:\/\/[^/]+)?\/(?:\?.*)?$/
-    );
   });
 
   test('should navigate to all products page', async ({

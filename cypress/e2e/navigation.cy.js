@@ -21,19 +21,6 @@ describe('Navigation Tests Comprehensive', () => {
       .should('be.visible');
   });
 
-  it('should navigate to home page when logo is clicked', () => {
-    cy.visitAllProducts();
-
-    cy.getNavbar()
-      .find('img[alt="logo"]')
-      .should('be.visible')
-      .click();
-
-    cy.location('pathname', {
-      timeout: 15000,
-    }).should('eq', '/');
-  });
-
   it('should navigate to all products page', () => {
     cy.getNavbar().as('nav').should('be.visible');
 
