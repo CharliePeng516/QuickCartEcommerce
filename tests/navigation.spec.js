@@ -7,7 +7,6 @@ const navLocator = (page) =>
 
 test.describe('Navigation Tests', () => {
   test.beforeEach(async ({ page }) => {
-    // 打印失败请求，方便排查
     page.on('requestfailed', (r) =>
       console.log(
         'REQ FAILED:',
@@ -16,7 +15,6 @@ test.describe('Navigation Tests', () => {
         r.failure()
       )
     );
-    // 用相对路径 + domcontentloaded（更稳）
     await page.goto('/', {
       waitUntil: 'domcontentloaded',
       timeout: 60_000,
@@ -26,7 +24,7 @@ test.describe('Navigation Tests', () => {
   test('should display navbar with logo and navigation links', async ({
     page,
   }) => {
-    const nav = page.getByRole('navigation'); // 只在 <nav> 中找
+    const nav = page.getByRole('navigation'); 
     await expect(nav).toBeVisible();
 
     await expect(
@@ -57,12 +55,10 @@ test.describe('Navigation Tests', () => {
   }) => {
     const nav = navLocator(page);
 
-    // 先到一个非首页的路由（相对路径）
     await page.goto('/all-products', {
       waitUntil: 'domcontentloaded',
     });
 
-    // 点击 logo 并等待 URL 变化（原子等待）
     const logo = nav.locator(
       'a:has(img[alt="logo"]), img[alt="logo"]'
     );
@@ -72,7 +68,7 @@ test.describe('Navigation Tests', () => {
       page.waitForURL(
         /^(?:https?:\/\/[^/]+)?\/(?:\?.*)?$/,
         { timeout: 15000 }
-      ), // 回首页
+      ),
       logo.click(),
     ]);
 
@@ -104,7 +100,6 @@ test.describe('Navigation Tests', () => {
     await expect(page).toHaveURL(
       /\/all-products(?:\/|\?.*)?$/
     );
-    // 断言页面内容（根据你的实际标题/文案调整）
     await expect(
       page
         .getByRole('heading', {
@@ -119,7 +114,7 @@ test.describe('Navigation Tests', () => {
   test('should navigate to about page', async ({
     page,
   }) => {
-    const nav = page.getByRole('navigation'); // 只在 <nav> 范围内查找
+    const nav = page.getByRole('navigation');
     await expect(nav).toBeVisible();
 
     const aboutLink = nav.getByRole('link', {

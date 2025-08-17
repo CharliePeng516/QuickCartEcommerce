@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    // 记录失败请求，方便定位
     page.on('requestfailed', (r) =>
       console.log(
         'REQ FAILED:',
@@ -19,7 +18,6 @@ test.describe('Navigation', () => {
   test('should navigate to all products page', async ({
     page,
   }) => {
-    // 只在 <nav> 里面找
     const nav = page.getByRole('navigation');
     await expect(nav).toBeVisible();
 
