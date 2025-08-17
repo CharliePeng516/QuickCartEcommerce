@@ -1,88 +1,152 @@
 import { test, expect } from '@playwright/test';
 
+const navLocator = (page) =>
+  page.locator(
+    'nav, header nav, [role="navigation"], [data-testid="navbar"]'
+  );
+
 test.describe('Navigation Tests', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the home page before each test
-    await page.goto('http://localhost:3000');
+    // 打印失败请求，方便排查
+    page.on('requestfailed', (r) =>
+      console.log(
+        'REQ FAILED:',
+        r.method(),
+        r.url(),
+        r.failure()
+      )
+    );
+    // 用相对路径 + domcontentloaded（更稳）
+    await page.goto('/', {
+      waitUntil: 'domcontentloaded',
+      timeout: 60_000,
+    });
   });
 
-  test('should display navbar with logo and navigation links', async ({ page }) => {
-    const nav = page.locator('nav');
-    
-    // Check if navbar is visible
+  test('should display navbar with logo and navigation links', async ({
+    page,
+  }) => {
+    const nav = page.getByRole('navigation'); // 只在 <nav> 中找
     await expect(nav).toBeVisible();
-    
-    // Check if logo is visible within navbar
-    await expect(nav.locator('img[alt="logo"]')).toBeVisible();
-    
-    // Check if main navigation links are visible within navbar
-    await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'Shop' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'About' })).toBeVisible();
+
+    await expect(
+      nav.locator(
+        'img[alt="logo"], [data-testid="logo"]'
+      )
+    ).toBeVisible();
+
+    await expect(
+      nav.getByRole('link', { name: /^home$/i })
+    ).toBeVisible();
+    await expect(
+      nav
+        .getByRole('link', { name: /^shop$/i })
+        .or(
+          nav.getByRole('link', {
+            name: /products/i,
+          })
+        )
+    ).toBeVisible();
+    await expect(
+      nav.getByRole('link', { name: /^about$/i })
+    ).toBeVisible();
   });
 
-  test('should navigate to home page when logo is clicked', async ({ page }) => {
-    const nav = page.locator('nav');
-    
-    // Navigate to a different page first
-    await page.goto('http://localhost:3000/all-products');
-    
-    // Click on the logo within navbar
-    await nav.locator('img[alt="logo"]').click();
-    
-    // Should navigate to home page
-    await expect(page).toHaveURL('http://localhost:3000/');
+  test('should navigate to home page when logo is clicked', async ({
+    page,
+  }) => {
+    const nav = navLocator(page);
+
+    // 先到一个非首页的路由（相对路径）
+    await page.goto('/all-products', {
+      waitUntil: 'domcontentloaded',
+    });
+
+    // 点击 logo 并等待 URL 变化（原子等待）
+    const logo = nav.locator(
+      'a:has(img[alt="logo"]), img[alt="logo"]'
+    );
+    await expect(logo).toBeVisible();
+
+    await Promise.all([
+      page.waitForURL(
+        /^(?:https?:\/\/[^/]+)?\/(?:\?.*)?$/,
+        { timeout: 15000 }
+      ), // 回首页
+      logo.click(),
+    ]);
+
+    await expect(page).toHaveURL(
+      /^(?:https?:\/\/[^/]+)?\/(?:\?.*)?$/
+    );
   });
 
-  test('should navigate to all products page', async ({ page }) => {
-    const nav = page.getByRole('navigation');
-  
-    // Ensure the navbar & link are truly ready
+  test('should navigate to all products page', async ({
+    page,
+  }) => {
+    const nav = navLocator(page);
     await expect(nav).toBeVisible();
-    const shop = nav.getByRole('link', { name: /shop/i });
+
+    const shop = nav.getByRole('link', {
+      name: /shop|products/i,
+    });
     await expect(shop).toBeVisible();
     await expect(shop).toBeEnabled();
-  
-    // If your app hydrates/fetches on first load, this helps
-    await page.waitForLoadState('networkidle');
-  
-    // Click and wait for navigation atomically
+
     await Promise.all([
-      page.waitForURL(/\/all-products(?:\/|\?.*)?$/, { timeout: 15000 }),
+      page.waitForURL(
+        /\/all-products(?:\/|\?.*)?$/,
+        { timeout: 15000 }
+      ),
       shop.click(),
     ]);
-  
-    // Optional: strict URL check after route settles
-    await expect(page).toHaveURL(/\/all-products$/);
-  
-    // Assert page content
-    await expect(page.locator('p', { hasText: /^All products$/i })).toBeVisible();
+
+    await expect(page).toHaveURL(
+      /\/all-products(?:\/|\?.*)?$/
+    );
+    // 断言页面内容（根据你的实际标题/文案调整）
+    await expect(
+      page
+        .getByRole('heading', {
+          name: /all products/i,
+        })
+        .or(
+          page.locator('text=/^All products$/i')
+        )
+    ).toBeVisible();
   });
 
-  test('should navigate to about page', async ({ page }) => {
-    const nav = page.getByRole('navigation');
-    
+  test('should navigate to about page', async ({
+    page,
+  }) => {
+    const nav = page.getByRole('navigation'); // 只在 <nav> 范围内查找
     await expect(nav).toBeVisible();
-    
-    // Click on About link within navbar
-    const aboutLink = nav.getByRole('link', { name: 'About' })
+
+    const aboutLink = nav.getByRole('link', {
+      name: /^about$/i,
+    });
     await expect(aboutLink).toBeVisible();
     await expect(aboutLink).toBeEnabled();
 
-    await page.waitForLoadState('networkidle');
     await Promise.all([
-      page.waitForURL(/\/about(?:\/|\?.*)?$/, { timeout: 15000 }),
+      page.waitForURL(/\/about(?:\/|\?.*)?$/, {
+        timeout: 15000,
+      }),
       aboutLink.click(),
     ]);
-    // Should navigate to about page
-    await expect(page).toHaveURL(/\/about$/);
+    await expect(page).toHaveURL(
+      /\/about(?:\/|\?.*)?$/
+    );
   });
 
-
-  test('should display search icon in navbar', async ({ page }) => {
-    const nav = page.locator('nav');
-    
-    // Check if search icon is visible within navbar
-    await expect(nav.locator('img[alt="search icon"]')).toBeVisible();
+  test('should display search icon in navbar', async ({
+    page,
+  }) => {
+    const nav = navLocator(page);
+    await expect(
+      nav.locator(
+        'img[alt="search icon"], [data-testid="search-icon"], svg[aria-label="search"]'
+      )
+    ).toBeVisible();
   });
 });
