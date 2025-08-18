@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "D:\\Projects\\QuickChart\\QuickCart\\playwright.config.js",
-    "rootDir": "D:/Projects/QuickChart/QuickCart",
+    "configFile": "/Users/a1/Desktop/QuickCart/playwright.config.js",
+    "rootDir": "/Users/a1/Desktop/QuickCart",
     "forbidOnly": false,
     "fullyParallel": false,
     "globalSetup": null,
@@ -10,9 +10,7 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {
-      "actualWorkers": 1
-    },
+    "metadata": {},
     "preserveOutput": "always",
     "reporter": [
       [
@@ -33,15 +31,13 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "D:/Projects/QuickChart/QuickCart/test-results",
+        "outputDir": "/Users/a1/Desktop/QuickCart/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 1
-        },
+        "metadata": {},
         "id": "chrome",
         "name": "chrome",
-        "testDir": "D:/Projects/QuickChart/QuickCart",
+        "testDir": "/Users/a1/Desktop/QuickCart",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -53,7 +49,7 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.54.2",
-    "workers": 8,
+    "workers": 4,
     "webServer": {
       "command": "npm run dev -- -p 3000 -H 127.0.0.1",
       "url": "http://127.0.0.1:3000",
@@ -61,59 +57,17 @@
       "timeout": 120000
     }
   },
-  "suites": [
+  "suites": [],
+  "errors": [
     {
-      "title": "tests\\perf.spec.js",
-      "file": "tests/perf.spec.js",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "perf: homepage",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 1500000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chrome",
-              "projectName": "chrome",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 693656,
-                  "errors": [],
-                  "stdout": [
-                    {
-                      "text": "Playwright perf written: artifacts\\playwright-perf.json\n"
-                    }
-                  ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-08-17T12:35:19.493Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "5cb02fb022a533858ee5-85105dd364b259571cf0",
-          "file": "tests/perf.spec.js",
-          "line": 58,
-          "column": 1
-        }
-      ]
+      "message": "Error: Process from config.webServer exited early.",
+      "stack": "Error: Process from config.webServer exited early."
     }
   ],
-  "errors": [],
   "stats": {
-    "startTime": "2025-08-17T12:35:18.276Z",
-    "duration": 695388.7609999999,
-    "expected": 1,
+    "startTime": "2025-08-17T23:44:49.788Z",
+    "duration": 11616.323,
+    "expected": 0,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
